@@ -18,5 +18,6 @@ function loadScript(url, callback){
     }
 
     script.src = url;
-    document.getElementByTagsName('head')[0].appendChild(script);
+    var head = document.getElementsByTagName('head')[0];
+    head.appendChild(script);
 }
