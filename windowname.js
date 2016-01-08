@@ -1,4 +1,4 @@
-/* http://zzsvn.pcauto.com.cn/svn/test/dj/js/windowname/windowname.js */
+
 
 /**
  * 无刷新跨域提交，requires Transfer
