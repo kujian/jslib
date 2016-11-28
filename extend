@@ -1,0 +1,74 @@
+function extend(target,src,filter){
+
+		var filter = filter || {};
+
+		for(var x in src){
+			if(target[x] == undefined ){
+				// 过滤掉生命周期函数
+				if(!filter[x] && x!='data'){
+					target[x] = src[x];
+				} 
+
+			}else{
+				console.error(x+"不能同名！")
+			}
+		}
+
+		return target;
+	}
+
+module.exports = {
+	mergePage:function(...component){
+		console.log(component);
+		// 生命周期函数队列
+		let queue = {
+			onLoad:[],
+			onReady:[],
+			onShow:[],
+			onHide:[],
+			onUnload:[]
+		}
+
+		let data = {};
+
+		// 保存生命周期函数
+		for(let name in queue){
+			for(let i=0,len = component.length; i<len; i++){
+				component[i][name] && queue[name].push(component[i][name] );
+			}
+		}
+		console.log(queue);
+
+
+		
+		let target = {};
+
+		for(let i=0,len = component.length;i<len;i++){
+
+			// 合并各组件对象
+			extend(target,component[i],queue);
+
+			// 合并各组件数据
+			if(component[i].data){
+				extend(data,component[i].data);
+			}
+			
+		}
+
+		// 合并组件周期函数
+		for(let name in queue){
+			target[name] = function(){
+				for(let i=0,len = queue[name].length; i<len; i++){
+					queue[name][i].apply(this,arguments);
+				}
+			}
+		}
+
+		target.data = data;
+
+
+		return target;
+	}
+
+	
+}
